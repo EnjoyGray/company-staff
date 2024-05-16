@@ -1,19 +1,23 @@
+import os
+import django
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'base.settings')
+django.setup()
+
 from django_seed import Seed
-from myapp.models import Position, Staff  # Замініть "myapp" на назву вашого додатку
+from cstaff.models import Staff
 
-# Створіть екземпляр Seed
-seeder = Seed()
+# Створіть екземпляр Seed знову
+seeder = Seed.seeder()
 
-# Встановіть генератори даних для моделі Staff
-seeder.add_entity(Staff, 5, {
-    'position': lambda x: Position.objects.get(positionID=6),  # Отримайте позицію за positionID
+# Заповнюємо базу даних
+seeder.add_entity(Staff, 50000, {
     'name': lambda x: seeder.faker.name(),
-    'date_of_employment': lambda x: seeder.faker.date_time_this_decade(),
-    'salary': lambda x: seeder.faker.random_number(digits=5),
+    'salary': lambda x: seeder.faker.random_number(digits=4),
 })
 
-# Запустіть генерацію
-inserted_pks = seeder.execute()
+# Викликаємо метод execute для створення співробітників
+staff = seeder.execute()
 
-# Виведіть згенеровані первинні ключі, якщо потрібно
-print(inserted_pks)
+
+print("Staff:", staff)
