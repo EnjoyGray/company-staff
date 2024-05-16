@@ -1,0 +1,65 @@
+{% extends "base.html" %} {% block content %}
+
+<section>
+    <div>
+        <p>Генеральний директор</p>
+        <p>Заступник генерального директора</p>
+        <p>Віце-президент</p>
+        <p>Директор відділу</p>
+        <p>Менеджер</p>
+        <p>Робітники</p>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>@twitter</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Position</th>
+                <th scope="col">Time Employed</th>
+                <th scope="col">Salary</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark Otto</td>
+                <td>Praciwnyk</td>
+                <td>@mdo</td>
+                <td>1200,80</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+{% endblock content %}
