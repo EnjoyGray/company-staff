@@ -4,7 +4,7 @@ from django.db import models
 
 class Position(models.Model):
     position_staff = models.CharField(max_length=255)
-    managerID = models.IntegerField(default=5, verbose_name="ID - position")
+    pisitionID = models.IntegerField(default=5, verbose_name="ID - position")
     
     def __str__(self):
         return self.position_staff
