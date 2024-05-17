@@ -6,6 +6,6 @@ from . import views
 
 app_name = 'cstaff'
 urlpatterns = [
-    path('', views.index, name="index")
-    # path('', views.IndexListView.as_view(), name="index"),    
+    # path('', views.index, name="index")
+    path('', views.StaffListView.as_view(), name="index"),    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
