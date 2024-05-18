@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -32,4 +33,6 @@ class Staff(models.Model):
         ordering = ['name']
 
 
+    def get_absolute_url(self):
+        return reverse('worker', kwargs={'worker_slug': self.slug})
 
