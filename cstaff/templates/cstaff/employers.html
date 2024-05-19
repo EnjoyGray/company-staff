@@ -1,7 +1,6 @@
 {% extends "base.html" %} {% block content %}
 
 <section class="mcontainer">
-    {% include "./includes/pagination.html" %}
     <table class="table">
         <thead>
             <tr>
@@ -24,7 +23,6 @@
         </tbody>
         {% endfor %}
     </table>
-
     {% include "./includes/pagination.html" %}
 </section>
 

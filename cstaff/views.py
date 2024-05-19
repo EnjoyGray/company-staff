@@ -10,7 +10,7 @@ class IndexListView(ListView):
     template_name = "cstaff/index.html"
     context_object_name = 'employers'
     # title_page = 'Головна сторінка'
-    paginate_by = 30
+    paginate_by = 25
     
     
 class EmployersListView(ListView):
@@ -18,10 +18,13 @@ class EmployersListView(ListView):
     template_name = "cstaff/employers.html"
     context_object_name = 'employers'
     title_page = 'Головна сторінка'
-    paginate_by = 30
+    paginate_by = 25
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_obj = context['page_obj']
+        context['page_range'] = paginator.get_elided_page_range(page_obj.number)
         return context
     
     
