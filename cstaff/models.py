@@ -19,7 +19,6 @@ class Position(models.Model):
 class Staff(models.Model):
     name = models.CharField(max_length=255, verbose_name="Name", db_index=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, verbose_name="Position")
-    # position = models.IntegerField(default="6")
     date_of_employment = models.DateTimeField(auto_now_add=True, verbose_name="Date of Employment")
     salary = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Salary")
     
@@ -34,5 +33,5 @@ class Staff(models.Model):
 
 
     def get_absolute_url(self):
-        return reverse('worker', kwargs={'worker_slug': self.slug})
+        return reverse('employers', kwargs={'pk': self.pk})
 

@@ -6,6 +6,8 @@ from . import views
 
 app_name = 'cstaff'
 urlpatterns = [
-    # path('', views.index, name="index")
-    path('', views.StaffListView.as_view(), name="index"),    
+    path('', views.IndexListView.as_view(), name="index"),
+    path('employers/', views.EmployersListView.as_view(), name="employers"),
+    path('mprofil/<int:pk>/', views.MProfilDetailView.as_view(), name='mprofil'),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

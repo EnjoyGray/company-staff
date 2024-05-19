@@ -1,3 +1,4 @@
+{% comment %}
 <nav aria-label="nrpage-nav">
     <ul class="pagination">
         {% if page_obj.number >= 3 %}
@@ -30,4 +31,46 @@
 
         {% endif %}
     </ul>
+</nav>
+{% endcomment %} {% load i18n %}
+<nav aria-label="nrpage-nav">
+    <ul class="pagination">
+        {% if page_obj.number >= 3 %}
+        <li class="page-item fl-item">
+            <a class="page-link" href="?page=1">{% translate 'First' %}</a>
+        </li>
+        {% endif %}
+        <!---->
+        {% if page_obj.has_previous %}
+        <li class="page-item fl-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% translate 'Previous' %}</a>
+        </li>
+        {% endif %}
+        <!---->
+        {% for num in page_obj.paginator.page_range %} {% if page_obj.number == num %}
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ num }}</span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %} {% endfor %}
+        <!---->
+        {% if page_obj.has_next %}
+        <li class="page-item fl-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% translate 'Next' %}</a>
+        </li>
+        {% endif %}
+    </ul>
+    <p class="paginator-info">
+        {{ page_obj.paginator.count }}
+        <!---->
+        {% if page_obj.paginator.count == 1 %} {{ cl.opts.verbose_name }} {% else %} {{ cl.opts.verbose_name_plural }} {% endif %} {% if show_all_url %}
+        <a href="{{ show_all_url }}" class="showall">{% translate 'Show all' %}</a>
+        {% endif %}
+    </p>
+    {% if cl.formset and page_obj.paginator.count %}
+    <input type="submit" name="_save" class="default" value="{% translate 'Save' %}" />
+    {% endif %}
 </nav>

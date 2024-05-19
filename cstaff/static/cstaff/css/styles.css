@@ -1,5 +1,6 @@
 body {
-    background-color: #3c4247 !important;
+    background-color: #222 !important;
+    color: #eee !important;
 }
 
 ul {
@@ -8,4 +9,21 @@ ul {
 
 ul ul {
     margin-left: 20px;
+}
+
+.mnavb nav {
+    background: #444 !important;
+}
+
+.mcolor ul li a {
+    color: #eee !important;
+}
+
+.mcontainer {
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+
+    max-width: 1200px;
+    margin: 40px 100px;
 }
