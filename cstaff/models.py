@@ -14,18 +14,22 @@ class Position(models.Model):
     class Meta:
         verbose_name = "Position"
         verbose_name_plural = "Positions"
-        ordering = ['position_staff']
+        ordering = ['positionID']
 
 class Staff(models.Model):
+    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, verbose_name="Name", db_index=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, verbose_name="Position")
     date_of_employment = models.DateTimeField(auto_now_add=True, verbose_name="Date of Employment")
     salary = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Salary")
+    image = models.ImageField(upload_to="photos/%Y/%m/%d/", null=True, blank=True, default=None, verbose_name="Image profil")
+    
     
     def __str__(self):
         return self.name
     
-
+    
+    
     class Meta:
         verbose_name = "Staff Member"
         verbose_name_plural = "Staff Members"

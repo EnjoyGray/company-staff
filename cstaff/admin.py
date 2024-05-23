@@ -4,7 +4,7 @@ from .models import Staff, Position
 # Register your models here.
 @admin.register(Staff)
 class CardAdmin(admin.ModelAdmin):
-    fields = ['id', 'name', 'position', 'salary', 'date_of_employment']
+    fields = ['id', 'image', 'name', 'position', 'salary', 'date_of_employment']
     readonly_fields = ['id', 'date_of_employment']
     list_display = ('name', 'id', 'position', 'salary', 'date_of_employment')
 

@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% block content %} {% load static %}
 
 <section>
     <div>
@@ -9,6 +9,24 @@
         <p>Менеджер</p>
         <p>Робітники</p>
     </div>
+</section>
+
+<section class="mcontainer">
+    {% for p in positions %}
+    <div class="positions">
+        {% for e in p.staff_set.all %}
+        <div class="mcard">
+            <div class="prof">
+                {% if e.image %}
+                <img class="prof-img" src="{{ e.image.url }}" alt="{{ p.position_staff }}" />
+                {% endif %}
+                <h6 class="prof-p">{{ p.position_staff }}</h6>
+            </div>
+            <h5>{{ e.name }}</h5>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
 </section>
 
 {% endblock content %}
