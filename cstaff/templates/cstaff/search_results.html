@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block content %}
+<section class="mcontainer">
+    <h2>Search Results</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Position</th>
+                <th scope="col">Time Employed</th>
+                <th scope="col">Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employer in employers %}
+            <tr>
+                <td>{{ employer.id }}</td>
+                <td>{{ employer.name }}</td>
+                <td>{{ employer.position }}</td>
+                <td>{{ employer.date_of_employment }}</td>
+                <td>{{ employer.salary }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No results found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

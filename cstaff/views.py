@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from django.http import HttpResponse
 from .models import Staff, Position
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
@@ -30,6 +31,25 @@ class EmployersListView(ListView):
         return context
     
     
+class SearchResultsView(ListView):
+    model = Staff
+    template_name = 'cstaff/search_results.html'
+    context_object_name = 'employers'
+    paginate_by = 25
+    
+    def get_queryset(self):
+            query = self.request.GET.get('q')
+            if query:
+                if query.isdigit():  # Перевіряємо, чи введено числове значення для ID
+                    return Staff.objects.filter(id=int(query))
+                else:
+                    return Staff.objects.filter(
+                        Q(name__icontains=query) |
+                        Q(position__position_staff__icontains=query) |
+                        Q(date_of_employment__icontains=query)
+                    )
+            return Staff.objects.all()
+        
     
 class MProfilDetailView(DetailView):
     model = Staff
@@ -43,28 +63,4 @@ class MProfilDetailView(DetailView):
 # def index(request):
 #     return render(request, "cstaff/index.html")
    
-
-
-# {% for p in positions %}
-#     <div class="positions">
-#         <div class="mcard">
-#             <div class="prof">
-#                 {% if p.staff_set.exists %}
-#                 <!-- Перевірка, чи існує працівник для даної позиції та чи існує у нього зображення -->
-#                 {% if p.staff_set.first.image %}
-#                 <img class="prof-img" src="{{ p.staff_set.first.image.url }}" alt="{{ p.position_staff }}" />
-#                 {% else %}
-#                 <p>No image available for {{ p.staff_set.first.name }}</p>
-#                 {% endif %}
-#                 <h6 class="prof-p">{{ p.position_staff }}</h6>
-#                 <h5>{{ p.staff_set.first.name }}</h5>
-#                 {% else %}
-#                 <p>No staff assigned to this position</p>
-#                 {% endif %}
-#             </div>
-#         </div>
-#     </div>
-#     {% endfor %}
-
-
 

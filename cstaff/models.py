@@ -6,7 +6,7 @@ from django.urls import reverse
 
 class Position(models.Model):
     position_staff = models.CharField(max_length=255, verbose_name="Position Title")
-    positionID = models.IntegerField(default=6, verbose_name="Position ID")
+    positionID = models.IntegerField(default=5, verbose_name="Position ID")
     
     def __str__(self):
         return self.position_staff
@@ -17,7 +17,6 @@ class Position(models.Model):
         ordering = ['positionID']
 
 class Staff(models.Model):
-    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, verbose_name="Name", db_index=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, verbose_name="Position")
     date_of_employment = models.DateTimeField(auto_now_add=True, verbose_name="Date of Employment")
