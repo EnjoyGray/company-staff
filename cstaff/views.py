@@ -22,12 +22,17 @@ class EmployersListView(ListView):
     context_object_name = 'employers'
     title_page = 'Employers'
     paginate_by = 25
-    
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('ordering', 'name')
+        return ordering
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
         page_obj = context['page_obj']
         context['page_range'] = paginator.get_elided_page_range(page_obj.number)
+        context['current_ordering'] = self.get_ordering()
         return context
     
     
