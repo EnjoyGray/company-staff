@@ -1,18 +1,19 @@
-{% extends "base.html" %} {% block content %}
-
+{% extends "base.html" %}
+<!---->
+{% load sort_tags %} {% block content %}
 <section class="mcontainer">
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Position</th>
-                <th scope="col">Time Employed</th>
-                <th scope="col">Salary</th>
+                <th scope="col">{% sort_url 'id' 'ID' %}</th>
+                <th scope="col">{% sort_url 'name' 'Name' %}</th>
+                <th scope="col">{% sort_url 'position' 'Position' %}</th>
+                <th scope="col">{% sort_url 'date_of_employment' 'Time Employed' %}</th>
+                <th scope="col">{% sort_url 'salary' 'Salary' %}</th>
             </tr>
         </thead>
-        {% for w in employers %}
         <tbody class="table-group-divider">
+            {% for w in table.items %}
             <tr>
                 <th scope="row">{{ w.id }}</th>
                 <td>{{ w.name }}</td>
@@ -20,10 +21,9 @@
                 <td>{{ w.date_of_employment }}</td>
                 <td>{{ w.salary }}</td>
             </tr>
+            {% endfor %}
         </tbody>
-        {% endfor %}
     </table>
     {% include "./includes/pagination.html" %}
 </section>
-
 {% endblock content %}

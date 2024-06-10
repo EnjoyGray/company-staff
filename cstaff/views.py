@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from .models import Staff, Position
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from django_table_sort.table import TableSort
 
 # Create your views here.
 
@@ -22,12 +23,23 @@ class EmployersListView(ListView):
     context_object_name = 'employers'
     title_page = 'Employers'
     paginate_by = 25
+    ordering_key = "o"
     
+    def get_ordering(self):
+        ordering = self.request.GET.getlist(self.ordering_key)
+        return ordering if ordering else None
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
         page_obj = context['page_obj']
         context['page_range'] = paginator.get_elided_page_range(page_obj.number)
+        context["table"] = TableSort(
+            self.request,
+            self.object_list,
+            table_css_classes="table table-light table-striped table-sm",
+            sort_key_name=self.ordering_key,
+        )
         return context
     
     
