@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Staff, Position
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
@@ -41,19 +41,25 @@ class SearchResultsView(ListView):
     template_name = 'cstaff/search_results.html'
     context_object_name = 'employers'
     paginate_by = 25
-    
+
     def get_queryset(self):
-            query = self.request.GET.get('q')
-            if query:
-                if query.isdigit():  # Перевіряємо, чи введено числове значення для ID
-                    return Staff.objects.filter(id=int(query))
-                else:
-                    return Staff.objects.filter(
-                        Q(name__icontains=query) |
-                        Q(position__position_staff__icontains=query) |
-                        Q(date_of_employment__icontains=query)
-                    )
-            return Staff.objects.all()
+        query = self.request.GET.get('q')
+        if query:
+            if query.isdigit():  # Check if the input is a digit for ID search
+                return Staff.objects.filter(id=int(query))
+            else:
+                return Staff.objects.filter(
+                    Q(name__icontains=query) |
+                    Q(position__position_staff__icontains=query) |
+                    Q(date_of_employment__icontains=query)
+                )
+        return Staff.objects.all()
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            employers = list(context['employers'].values('id', 'name', 'position__position_staff', 'date_of_employment', 'salary'))
+            return JsonResponse({'employers': employers})
+        return super().render_to_response(context, **response_kwargs)
         
     
 class MProfilDetailView(DetailView):

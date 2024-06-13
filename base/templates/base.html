@@ -52,7 +52,6 @@
                     </div>
                 </div>
             </nav>
-
             <script>
                 $(document).ready(function () {
                     $("#search-btn").click(function (e) {
@@ -60,9 +59,31 @@
                         var searchInput = $("#search-input").val();
                         $.ajax({
                             type: "GET",
-                            url: "/search",
-                            data: "q=" + searchInput,
+                            url: "{% url 'cstaff:search_results' %}",
+                            // url: "/search",
+                            data: { q: searchInput },
                             dataType: "json",
+                            success: function (data) {
+                                var results = "";
+                                if (data.employers.length > 0) {
+                                    data.employers.forEach(function (employer) {
+                                        results += `
+                                            <tr>
+                                                <td>${employer.id}</td>
+                                                <td>${employer.name}</td>
+                                                <td>${employer.position__position_staff}</td>
+                                                <td>${employer.date_of_employment}</td>
+                                                <td>${employer.salary}</td>
+                                            </tr>`;
+                                    });
+                                } else {
+                                    results = '<tr><td colspan="5">No results found.</td></tr>';
+                                }
+                                $("#search-results tbody").html(results);
+                            },
+                            error: function () {
+                                $("#search-results tbody").html('<tr><td colspan="5">Error loading results.</td></tr>');
+                            },
                         });
                     });
                 });
