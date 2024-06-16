@@ -54,13 +54,15 @@
             </nav>
             <script>
                 $(document).ready(function () {
-                    $("#search-btn").click(function (e) {
-                        e.preventDefault();
+                    var searchResultsUrl = "{% url 'cstaff:search_results' %}";
+                    var homeUrl = "{% url 'cstaff:index' %}"; // Замініть 'home' на правильне ім'я URL головної сторінки
+
+                    function performSearch() {
                         var searchInput = $("#search-input").val();
                         $.ajax({
                             type: "GET",
-                            url: "{% url 'cstaff:search_results' %}",
-                            // url: "/search",
+                            // url: "{% url 'cstaff:search_results' %}",
+                            url: searchResultsUrl,
                             data: { q: searchInput },
                             dataType: "json",
                             success: function (data) {
@@ -85,7 +87,24 @@
                                 $("#search-results tbody").html('<tr><td colspan="5">Error loading results.</td></tr>');
                             },
                         });
-                    });
+                    }
+
+                    // $("#search-btn").click(function (e) {
+                    //     e.preventDefault();
+                    //     performSearch();
+                    // });
+
+                    console.log(window.location.pathname);
+
+                    if (window.location.pathname === homeUrl) {
+                        $("#search-btn").click(function () {});
+                    } else if (window.location.pathname === searchResultsUrl) {
+                        $("#search-btn").click(function (e) {
+                            e.preventDefault();
+                            performSearch();
+                        });
+                        performSearch();
+                    }
                 });
             </script>
         </section>
