@@ -67,11 +67,25 @@ class MProfilDetailView(DetailView):
     template_name = "cstaff/profil.html"
     context_object_name = 'profil'
     
-    
-
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+        
+def profiltest(request):
+    return render(request, "cstaff/profil.html")
 
 # def index(request):
 #     return render(request, "cstaff/index.html")
    
 
+# -------------users--------------------
+
+
+
+
+def login_user(request):
+    return render(request, "cstaff/login.html")
+
+
+# def logout_user(request):
+#     return HttpResponse('logout_user')

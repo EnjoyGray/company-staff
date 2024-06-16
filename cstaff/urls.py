@@ -8,7 +8,15 @@ app_name = 'cstaff'
 urlpatterns = [
     path('', views.IndexListView.as_view(), name="index"),
     path('employers/', views.EmployersListView.as_view(), name="employers"),
-    path('mprofil/<int:pk>/', views.MProfilDetailView.as_view(), name='mprofil'),
+    path('myprofil/<int:pk>/', views.MProfilDetailView.as_view(), name='myprofil'),
+    path('myprofil/', views.profiltest, name='myprofil'),
     path('search/', views.SearchResultsView.as_view(), name='search_results'),
     
+    # path('login/', views.login_user, name='login'),
+    # path('logout/', views.logout_user, name='logout'),
+    
+    path('login/', views.login_user, name='login'),
+    # path('login/', views.LoginView.as_view(), name='login'),
+    # path('logout/', views.LogoutView.as_view(), name='logout'),
+    # path('signup/', views.SignUpView.as_view(), name='signup'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

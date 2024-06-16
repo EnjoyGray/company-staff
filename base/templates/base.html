@@ -39,10 +39,13 @@
                                 <a class="nav-link" href="{% url 'cstaff:employers' %}">Employers</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">My Profil</a>
+                                <a class="nav-link" href="{% url 'cstaff:myprofil' %}">My Profil</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="http://127.0.0.1:8000/admin/">Admin Panel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cstaff:login' %}">Registration</a>
                             </li>
                         </ul>
                         <form class="d-flex" action="{% url 'cstaff:search_results' %}" method="GET">
