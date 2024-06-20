@@ -12,7 +12,11 @@ ul ul {
 }
 
 .mnavb nav {
+    /* position: fixed;
+    top: 0px;
+    z-index: 3; */
     background: #444 !important;
+    /* width: 100%; */
 }
 
 .mcolor ul li a {
@@ -102,4 +106,111 @@ td {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; /* Якщо потрібно відображати "..." для обрізаного тексту */
+}
+
+/* login */
+.centr_monitor {
+    height: calc(100dvh - 300px);
+}
+
+.tcentr {
+    text-align: center;
+}
+
+.login_color {
+    color: #ccc;
+}
+
+.login-container {
+    background-color: #444 !important;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+.login-container h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-container input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-container input[type="submit"]:hover {
+    background-color: #ccc;
+    color: #333;
+}
+
+.login_p {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* PROFIL */
+.mp-box {
+    max-width: 1200px !important;
+    width: 1200px;
+    background-color: #444;
+
+    margin: 0px 200px;
+    padding: 30px;
+}
+
+.mp-header {
+    display: flex;
+}
+
+.mp-img {
+    max-width: 200px;
+    height: 100%;
+}
+
+.mp-header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin-left: 30px;
+}
+
+.mp-id {
+    font-size: 12px;
+}
+
+.mp-name {
+}
+
+.mp-body {
+    margin-top: 30px;
+    display: flex;
+    gap: 0px 30px;
+}
+
+.form-error {
+    color: rgb(209, 49, 49);
+}
+
+#mybtn {
+    color: #eee;
+    background-color: inherit;
+    border: none;
 }

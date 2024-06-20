@@ -5,21 +5,14 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CEmployer</title>
+        <title>{{ title }}</title>
         <link type="text/css" href="{% static 'css\global.css' %}" rel="stylesheet" />
         <link type="text/css" href="{% static 'cstaff\css\styles.css' %}" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+        {% comment %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" />
-
-        {% comment %} Data sort {% endcomment %}
-        <link rel="stylesheet" href="{% static 'django_table_sort.css' %}" />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
-            integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
+        {% endcomment %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
         <section class="mnavb">
@@ -46,19 +39,94 @@
                                 <a class="nav-link" href="{% url 'cstaff:employers' %}">Employers</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">My Profil</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="http://127.0.0.1:8000/admin/">Admin Panel</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cstaff:myprofil' %}">My Profil</a>
+                            </li>
                         </ul>
+                        {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'cstaff:logout' %}">
+                            {% csrf_token %}
+                            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">{{ user.username }}</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'cstaff:logout' %}"><button id="mybtn" type="submit">LogOut</button></a>
+                                </li>
+                            </ul>
+                        </form>
+                        {% else %}
+                        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cstaff:login' %}">Login</a>
+                            </li>
+                        </ul>
+                        {% endif %}
                         <form class="d-flex" action="{% url 'cstaff:search_results' %}" method="GET">
-                            <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" />
-                            <button class="btn btn-outline-success" type="submit">Search</button>
+                            <input id="search-input" class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" />
+                            <button id="search-btn" class="btn btn-outline-success" type="submit">Search</button>
                         </form>
                     </div>
                 </div>
             </nav>
+            <script>
+                $(document).ready(function () {
+                    var searchResultsUrl = "{% url 'cstaff:search_results' %}";
+                    var homeUrl = "{% url 'cstaff:index' %}"; // Замініть 'home' на правильне ім'я URL головної сторінки
+
+                    function performSearch() {
+                        var searchInput = $("#search-input").val();
+                        $.ajax({
+                            type: "GET",
+                            // url: "{% url 'cstaff:search_results' %}",
+                            url: searchResultsUrl,
+                            data: { q: searchInput },
+                            dataType: "json",
+                            success: function (data) {
+                                var results = "";
+                                if (data.employers.length > 0) {
+                                    data.employers.forEach(function (employer) {
+                                        results += `
+                                            <tr>
+                                                <td>${employer.id}</td>
+                                                <td>${employer.name}</td>
+                                                <td>${employer.position__position_staff}</td>
+                                                <td>${employer.date_of_employment}</td>
+                                                <td>${employer.salary}</td>
+                                            </tr>`;
+                                    });
+                                } else {
+                                    results = '<tr><td colspan="5">No results found.</td></tr>';
+                                }
+                                $("#search-results tbody").html(results);
+                            },
+                            error: function () {
+                                $("#search-results tbody").html('<tr><td colspan="5">Error loading results.</td></tr>');
+                            },
+                        });
+                    }
+
+                    // $("#search-btn").click(function (e) {
+                    //     e.preventDefault();
+                    //     performSearch();
+                    // });
+
+                    console.log(window.location.pathname);
+
+                    if (window.location.pathname === homeUrl) {
+                        $("#search-btn").click(function () {});
+                    } else if (window.location.pathname === searchResultsUrl) {
+                        $("#search-btn").click(function (e) {
+                            e.preventDefault();
+                            performSearch();
+                        });
+                        performSearch();
+                    }
+                });
+            </script>
         </section>
 
         {% block content %} {% endblock %}

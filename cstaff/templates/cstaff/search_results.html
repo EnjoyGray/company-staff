@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 <section class="mcontainer">
     <h2>Search Results</h2>
-    <table class="table">
+    <table class="table" id="search-results">
         <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -12,19 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for employer in employers %}
-            <tr>
-                <td>{{ employer.id }}</td>
-                <td>{{ employer.name }}</td>
-                <td>{{ employer.position }}</td>
-                <td>{{ employer.date_of_employment }}</td>
-                <td>{{ employer.salary }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5">No results found.</td>
-            </tr>
-            {% endfor %}
+            <!-- Results will be populated here by AJAX -->
         </tbody>
     </table>
 </section>

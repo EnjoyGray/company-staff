@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Staff, Position
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
-from django_table_sort.table import TableSort
+from .forms import LoginUserForm
+from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth.forms import AuthenticationForm
+from django.urls import reverse, reverse_lazy
 
 # Create your views here.
 
@@ -23,23 +26,17 @@ class EmployersListView(ListView):
     context_object_name = 'employers'
     title_page = 'Employers'
     paginate_by = 25
-    ordering_key = "o"
-    
+
     def get_ordering(self):
-        ordering = self.request.GET.getlist(self.ordering_key)
-        return ordering if ordering else None
+        ordering = self.request.GET.get('ordering', 'name')
+        return ordering
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
         page_obj = context['page_obj']
         context['page_range'] = paginator.get_elided_page_range(page_obj.number)
-        context["table"] = TableSort(
-            self.request,
-            self.object_list,
-            table_css_classes="table table-light table-striped table-sm",
-            sort_key_name=self.ordering_key,
-        )
+        context['current_ordering'] = self.get_ordering()
         return context
     
     
@@ -48,19 +45,25 @@ class SearchResultsView(ListView):
     template_name = 'cstaff/search_results.html'
     context_object_name = 'employers'
     paginate_by = 25
-    
+
     def get_queryset(self):
-            query = self.request.GET.get('q')
-            if query:
-                if query.isdigit():  # Перевіряємо, чи введено числове значення для ID
-                    return Staff.objects.filter(id=int(query))
-                else:
-                    return Staff.objects.filter(
-                        Q(name__icontains=query) |
-                        Q(position__position_staff__icontains=query) |
-                        Q(date_of_employment__icontains=query)
-                    )
-            return Staff.objects.all()
+        query = self.request.GET.get('q')
+        if query:
+            if query.isdigit():  # Check if the input is a digit for ID search
+                return Staff.objects.filter(id=int(query))
+            else:
+                return Staff.objects.filter(
+                    Q(name__icontains=query) |
+                    Q(position__position_staff__icontains=query) |
+                    Q(date_of_employment__icontains=query)
+                )
+        return Staff.objects.all()
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            employers = list(context['employers'].values('id', 'name', 'position__position_staff', 'date_of_employment', 'salary'))
+            return JsonResponse({'employers': employers})
+        return super().render_to_response(context, **response_kwargs)
         
     
 class MProfilDetailView(DetailView):
@@ -69,10 +72,28 @@ class MProfilDetailView(DetailView):
     context_object_name = 'profil'
     
     
-
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+        
+def profiltest(request):
+    return render(request, "cstaff/profil.html")
 
 # def index(request):
 #     return render(request, "cstaff/index.html")
    
+
+# -------------users--------------------
+
+
+
+
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = 'cstaff/login.html'
+    extra_context = {'title': 'Login'}
+    
+    def get_success_url(self):
+        return reverse_lazy('cstaff:index')
+
 
