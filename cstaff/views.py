@@ -3,6 +3,10 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from .models import Staff, Position
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from .forms import LoginUserForm
+from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth.forms import AuthenticationForm
+from django.urls import reverse, reverse_lazy
 
 # Create your views here.
 
@@ -67,6 +71,7 @@ class MProfilDetailView(DetailView):
     template_name = "cstaff/profil.html"
     context_object_name = 'profil'
     
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
@@ -83,9 +88,12 @@ def profiltest(request):
 
 
 
-def login_user(request):
-    return render(request, "cstaff/login.html")
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = 'cstaff/login.html'
+    extra_context = {'title': 'Login'}
+    
+    def get_success_url(self):
+        return reverse_lazy('cstaff:index')
 
 
-# def logout_user(request):
-#     return HttpResponse('logout_user')

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.urls import path
 from django.conf.urls.static import static
 from . import views
+from django.contrib.auth.views import LogoutView
 
 
 app_name = 'cstaff'
@@ -12,11 +13,7 @@ urlpatterns = [
     path('myprofil/', views.profiltest, name='myprofil'),
     path('search/', views.SearchResultsView.as_view(), name='search_results'),
     
-    # path('login/', views.login_user, name='login'),
-    # path('logout/', views.logout_user, name='logout'),
+    path('login/', views.LoginUser.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     
-    path('login/', views.login_user, name='login'),
-    # path('login/', views.LoginView.as_view(), name='login'),
-    # path('logout/', views.LogoutView.as_view(), name='logout'),
-    # path('signup/', views.SignUpView.as_view(), name='signup'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

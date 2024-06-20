@@ -134,7 +134,7 @@ td {
     margin-bottom: 15px;
 }
 
-.login-container input[type="email"],
+.login-container input[type="text"],
 .login-container input[type="password"] {
     width: 100%;
     padding: 10px;
@@ -203,4 +203,8 @@ td {
     margin-top: 30px;
     display: flex;
     gap: 0px 30px;
+}
+
+.form-error {
+    color: rgb(209, 49, 49);
 }
