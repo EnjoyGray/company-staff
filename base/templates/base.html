@@ -44,13 +44,27 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cstaff:myprofil' %}">My Profil</a>
                             </li>
+                        </ul>
+                        {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'cstaff:logout' %}">
+                            {% csrf_token %}
+                            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">{{ user.username }}</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'cstaff:logout' %}"><button id="mybtn" type="submit">LogOut</button></a>
+                                </li>
+                            </ul>
+                        </form>
+                        {% else %}
+                        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cstaff:login' %}">Login</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Registration</a>
-                            </li>
                         </ul>
+                        {% endif %}
                         <form class="d-flex" action="{% url 'cstaff:search_results' %}" method="GET">
                             <input id="search-input" class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" />
                             <button id="search-btn" class="btn btn-outline-success" type="submit">Search</button>

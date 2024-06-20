@@ -208,3 +208,9 @@ td {
 .form-error {
     color: rgb(209, 49, 49);
 }
+
+#mybtn {
+    color: #eee;
+    background-color: inherit;
+    border: none;
+}
