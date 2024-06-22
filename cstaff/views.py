@@ -7,6 +7,7 @@ from .forms import LoginUserForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -20,6 +21,7 @@ class IndexListView(ListView):
         return Position.objects.filter(positionID__in=[1, 2, 3, 4])
     
     
+ 
 class EmployersListView(ListView):
     model = Staff
     template_name = "cstaff/employers.html"
