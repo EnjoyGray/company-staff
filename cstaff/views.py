@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
@@ -8,6 +9,12 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib import messages
+from .forms import UserRegistrationForm
+from cstaff.models import Staff
+
 
 # Create your views here.
 
@@ -91,7 +98,7 @@ def profiltest(request):
 
 
 class LoginUser(LoginView):
-    form_class = LoginUserForm
+    form_class = AuthenticationForm
     template_name = 'cstaff/login.html'
     extra_context = {'title': 'Login'}
     
@@ -99,3 +106,15 @@ class LoginUser(LoginView):
         return reverse_lazy('cstaff:index')
 
 
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            Staff.objects.create(user=user, name=f"{user.first_name} {user.last_name}", position_id=1, salary=0.00, date_of_employment=datetime.now())
+            login(request, user)
+            messages.success(request, 'A user account was created!')
+            return redirect('cstaff:index')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'cstaff/register.html', {'form': form})

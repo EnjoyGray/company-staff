@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %} {% load static %}
 
 <section class="mcontainer">
-    {% for p in positions %}
+    {% comment %} {% for p in positions %}
     <div class="positions">
         {% for e in p.staff_set.all %}
         <div class="mcard">
@@ -15,7 +15,7 @@
         </div>
         {% endfor %}
     </div>
-    {% endfor %}
+    {% endfor %} {% endcomment %}
 </section>
 
 {% endblock content %}
