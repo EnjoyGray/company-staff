@@ -1,21 +1,19 @@
 from datetime import datetime
-from django.shortcuts import render
+from django.conf import settings
+from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
-from .models import Staff, Position
+from .models import Staff, Position, StaffGroup
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
-from .forms import LoginUserForm
+from .forms import LoginUserForm, UserRegistrationForm, ProfileUserForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.forms import AuthenticationForm
-from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+from django.contrib.auth import login, get_user_model
 from django.contrib import messages
-from .forms import UserRegistrationForm
-from cstaff.models import Staff
-from django.shortcuts import render, redirect
-from .forms import UserRegistrationForm
+from django.urls import reverse, reverse_lazy
 
 
 # Create your views here.
@@ -76,25 +74,41 @@ class SearchResultsView(ListView):
             return JsonResponse({'employers': employers})
         return super().render_to_response(context, **response_kwargs)
         
-    
-class MProfilDetailView(DetailView):
+   
+class EmployersProfilDetailView(LoginRequiredMixin, DetailView):
     model = Staff
-    template_name = "cstaff/profil.html"
+    template_name = "cstaff/employers_profil.html"
+    pk_url_kwarg = "pk"
     context_object_name = 'profil'
     
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['profil'] = self.request.user.staff
         return context
-        
-def profiltest(request):
-    return render(request, "cstaff/profil.html")
+
+
 
 # def index(request):
 #     return render(request, "cstaff/index.html")
    
 
 # -------------users--------------------
+
+        
+class MyProfilDetailView(LoginRequiredMixin, UpdateView):
+    model = get_user_model()
+    form_class = ProfileUserForm
+    template_name = "cstaff/myprofil.html"
+    extra_context = {
+        'title': "My Profil",
+    }
+
+    def get_success_url(self):
+        return reverse_lazy('cstaff:index')
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 

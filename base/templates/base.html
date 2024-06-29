@@ -52,7 +52,7 @@
                             {% csrf_token %}
                             <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">{{ user.username }}</a>
+                                    <a class="nav-link" href="{% url 'cstaff:myprofil' %}">{{ user.username }}</a>
                                 </li>
                                 <li class="nav-item">
                                     <button id="mybtn" class="nav-link btn btn-link" type="submit">LogOut</button>
