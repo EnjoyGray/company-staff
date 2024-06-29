@@ -215,3 +215,17 @@ td {
     background-color: inherit;
     border: none;
 }
+
+.ionicon {
+    width: 30px !important;
+    color: #ccc !important;
+}
+
+.ionicon:hover,
+.ionicon:active {
+    color: #fff !important;
+}
+
+.r-position {
+    margin-left: auto;
+}

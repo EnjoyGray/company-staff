@@ -111,6 +111,20 @@ class MyProfilDetailView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
 
+class EditMyProfilDetailView(LoginRequiredMixin, UpdateView):
+    model = get_user_model()
+    form_class = ProfileUserForm
+    template_name = "cstaff/myprofil_edit.html"
+    extra_context = {
+        'title': "My Profil",
+    }
+
+    def get_success_url(self):
+        return reverse_lazy('cstaff:myprofil')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
 
 
 class LoginUser(LoginView):

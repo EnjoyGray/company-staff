@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block content %}
+
+<section class="mcontainer">
+    <div class="mp-box">
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %} {% if user.photo %}
+                <img class="mp-img" src="{{ user.image.url }}" alt="Users Picture" />
+                {% else %}
+                <img class="mp-img" src="\static\cstaff\blank_profile.jpeg" alt="Users Picture" />
+                {% endif %}
+                <div class="form-error">{{ form.non_field_errors }}</div>
+                {% for f in form %}
+                <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+                <div class="form-error">{{ f.errors }}</div>
+                {% endfor %}
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
