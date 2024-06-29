@@ -3,7 +3,7 @@
 <section class="mcontainer centr_monitor login_color">
     <div class="container">
         <h2>Register</h2>
-        <form method="post" action="{% url 'cstaff:register' %}">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %} {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Register</button>
         </form>

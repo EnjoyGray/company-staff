@@ -14,18 +14,20 @@ from django.contrib.auth import login
 from django.contrib import messages
 from .forms import UserRegistrationForm
 from cstaff.models import Staff
+from django.shortcuts import render, redirect
+from .forms import UserRegistrationForm
 
 
 # Create your views here.
 
 class IndexListView(ListView):
-    model = Position
+    model = Staff
     template_name = "cstaff/index.html"
     context_object_name = 'positions'
     title_page = 'Home'
 
     def get_queryset(self):
-        return Position.objects.filter(positionID__in=[1, 2, 3, 4])
+        return Position.objects.filter(pk__in=[1, 2, 3, 4])
     
     
  
@@ -37,7 +39,7 @@ class EmployersListView(ListView):
     paginate_by = 25
 
     def get_ordering(self):
-        ordering = self.request.GET.get('ordering', 'name')
+        ordering = self.request.GET.get('ordering', 'id')
         return ordering
 
     def get_context_data(self, **kwargs):
@@ -108,12 +110,10 @@ class LoginUser(LoginView):
 
 def register(request):
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+        form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            Staff.objects.create(user=user, name=f"{user.first_name} {user.last_name}", position_id=1, salary=0.00, date_of_employment=datetime.now())
-            login(request, user)
-            messages.success(request, 'A user account was created!')
+            messages.success(request, 'Користувача успішно зареєстровано!')
             return redirect('cstaff:index')
     else:
         form = UserRegistrationForm()

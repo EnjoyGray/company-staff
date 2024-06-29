@@ -65,11 +65,12 @@
                                 <a class="nav-link" href="{% url 'cstaff:login' %}">Login</a>
                             </li>
                         </ul>
-                        {% endif %}
+                        {% endif %} {% comment %}
                         <form class="d-flex" action="{% url 'cstaff:search_results' %}" method="GET">
                             <input id="search-input" class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" />
                             <button id="search-btn" class="btn btn-outline-success" type="submit">Search</button>
                         </form>
+                        {% endcomment %}
                     </div>
                 </div>
             </nav>
