@@ -229,3 +229,12 @@ td {
 .r-position {
     margin-left: auto;
 }
+
+.form-container p {
+    color: #ccc;
+    width: 400px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

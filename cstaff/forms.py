@@ -46,3 +46,30 @@ class ProfileUserForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-input'}),
             'last_name': forms.TextInput(attrs={'class': 'form-input'}),
         }
+
+
+
+
+class UserForm(forms.ModelForm):
+    username = forms.CharField(disabled=True, label='Login', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.CharField(disabled=True, label='E-mail', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    first_name = forms.CharField(label='First name', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    last_name = forms.CharField(label='Last name', widget=forms.TextInput(attrs={'class': 'form-input'}))
+
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'email', 'first_name', 'last_name']
+        
+        
+
+class StaffForm(forms.ModelForm):   
+    class Meta:
+        model = Staff
+        # fields = ['position', 'group', 'salary', 'image']
+        fields = ['image']
+        widgets = {
+            'image': forms.FileInput(attrs={'class': 'form-input'}),
+            # 'position': forms.Select(attrs={'class': 'form-input'}),
+            # 'group': forms.Select(attrs={'class': 'form-input'}),
+            # 'salary': forms.TextInput(attrs={'class': 'form-input'}),
+        }

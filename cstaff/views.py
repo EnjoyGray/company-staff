@@ -5,9 +5,9 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from .models import Staff, Position, StaffGroup
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
-from .forms import LoginUserForm, UserRegistrationForm, ProfileUserForm
+from .forms import LoginUserForm, StaffForm, UserForm, UserRegistrationForm, ProfileUserForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
@@ -109,6 +109,33 @@ class MyProfilDetailView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+
+@login_required
+def profile_view(request):
+    user = request.user
+    try:
+        staff = user.profile  # отримуємо пов'язану модель Staff через OneToOne
+    except Staff.DoesNotExist:
+        staff = Staff(user=user)
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=user)
+        staff_form = StaffForm(request.POST, request.FILES, instance=staff)
+        if user_form.is_valid() and staff_form.is_valid():
+            user_form.save()
+            staff_form.save()
+            return redirect('cstaff:myprofil')  # замініть 'profile' на ваше посилання
+    else:
+        user_form = UserForm(instance=user)
+        staff_form = StaffForm(instance=staff)
+
+    context = {
+        'user_form': user_form,
+        'staff_form': staff_form,
+    }
+    return render(request, 'cstaff/myprofil_edit.html', context)
 
 
 class EditMyProfilDetailView(LoginRequiredMixin, UpdateView):

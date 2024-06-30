@@ -10,7 +10,7 @@ urlpatterns = [
     path('', views.IndexListView.as_view(), name="index"),
     path('employers/', views.EmployersListView.as_view(), name="employers"),
     path('myprofil/', views.MyProfilDetailView.as_view(), name='myprofil'),
-    path('myprofil/edit/', views.EditMyProfilDetailView.as_view(), name='edit_myprofil'),
+    path('myprofil/edit/', views.profile_view, name='edit_myprofil'),
     path('profil_employers/<int:pk>/', views.EmployersProfilDetailView.as_view(), name='employers_profil'),
     path('search/', views.SearchResultsView.as_view(), name='search_results'),
     

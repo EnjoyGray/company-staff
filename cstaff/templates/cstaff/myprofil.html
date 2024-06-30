@@ -5,8 +5,8 @@
         <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mp-header">
-                {% if user.photo %}
-                <img class="mp-img" src="{{ user.image.url }}" alt="Users Picture" />
+                {% if user.profile.image %}
+                <img class="mp-img" src="{{ user.profile.image.url }}" alt="Users Picture" />
                 {% else %}
                 <img class="mp-img" src="\static\cstaff\blank_profile.jpeg" alt="Users Picture" />
                 {% endif %}
@@ -21,14 +21,14 @@
         </div>
         <div class="mp-body">
             <div>
-                <p>position:</p>
                 <p>email:</p>
+                <p>position:</p>
                 <p>salary:</p>
                 <p>date:</p>
             </div>
             <div>
-                <p>{{ user.profile.position }}</p>
                 <p>{{ user.email }}</p>
+                <p>{{ user.profile.position }}</p>
                 <p>{{ user.profile.salary }}$</p>
                 <p>{{ user.profile.date_of_employment }}</p>
             </div>
