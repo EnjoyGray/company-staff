@@ -205,12 +205,36 @@ td {
     gap: 0px 30px;
 }
 
-.form-error {
-    color: rgb(209, 49, 49);
+.form-error,
+.errorlist {
+    color: rgb(209, 49, 49) !important;
 }
 
 #mybtn {
     color: #eee;
     background-color: inherit;
     border: none;
+}
+
+.ionicon {
+    width: 30px !important;
+    color: #ccc !important;
+}
+
+.ionicon:hover,
+.ionicon:active {
+    color: #fff !important;
+}
+
+.r-position {
+    margin-left: auto;
+}
+
+.form-container p {
+    color: #ccc;
+    width: 400px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block content %}
+
+<section class="mcontainer">
+    <div class="mp-box">
+        <div>
+            <form method="post" enctype="multipart/form-data" class="form-container">
+                {% csrf_token %}
+                <!---->
+                {{ user_form.as_p }}
+                <!---->
+                {{ staff_form.as_p }}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

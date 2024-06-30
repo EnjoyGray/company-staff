@@ -35,6 +35,7 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/">Home</a>
                             </li>
+                            {% if user.is_authenticated %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cstaff:employers' %}">Employers</a>
                             </li>
@@ -44,17 +45,17 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cstaff:myprofil' %}">My Profil</a>
                             </li>
+                            {% endif %}
                         </ul>
                         {% if user.is_authenticated %}
                         <form method="post" action="{% url 'cstaff:logout' %}">
                             {% csrf_token %}
                             <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">{{ user.username }}</a>
+                                    <a class="nav-link" href="{% url 'cstaff:myprofil' %}">{{ user.username }}</a>
                                 </li>
-
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'cstaff:logout' %}"><button id="mybtn" type="submit">LogOut</button></a>
+                                    <button id="mybtn" class="nav-link btn btn-link" type="submit">LogOut</button>
                                 </li>
                             </ul>
                         </form>
@@ -64,11 +65,12 @@
                                 <a class="nav-link" href="{% url 'cstaff:login' %}">Login</a>
                             </li>
                         </ul>
-                        {% endif %}
+                        {% endif %} {% comment %}
                         <form class="d-flex" action="{% url 'cstaff:search_results' %}" method="GET">
                             <input id="search-input" class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" />
                             <button id="search-btn" class="btn btn-outline-success" type="submit">Search</button>
                         </form>
+                        {% endcomment %}
                     </div>
                 </div>
             </nav>
