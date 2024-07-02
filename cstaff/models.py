@@ -29,15 +29,6 @@ class StaffGroup(models.Model):
         verbose_name_plural = "Staff Groups"
         ordering = ['id']
 
-
-def get_default_position():
-    return Position.objects.get(id=5)
-
-def get_default_group():
-    return StaffGroup.objects.get(id=1)
-
-
-
 class StaffGroup(models.Model):
     group_staff = models.IntegerField(verbose_name="Group")
     
