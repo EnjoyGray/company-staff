@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 
+
 class Position(models.Model):
     position_staff = models.CharField(
         max_length=255,

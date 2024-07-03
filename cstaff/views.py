@@ -14,6 +14,12 @@ from django.views.generic import TemplateView
 from django.contrib.auth import login, get_user_model
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from datetime import datetime
+from .encoders import DateTimeEncoder
 
 
 # Create your views here.
@@ -26,27 +32,50 @@ class IndexListView(ListView):
 
     def get_queryset(self):
         return Position.objects.filter(pk__in=[1, 2, 3, 4])
+
+
+def employers_view(request):
+    data = {
+        "name": "John Doe",
+        "hired_at": datetime.now()  # Приклад об'єкта datetime
+    }
     
-    
- 
+    return JsonResponse(data, encoder=DateTimeEncoder)
+
 class EmployersListView(ListView):
-    model = Staff
+    model = User
     template_name = "cstaff/employers.html"
     context_object_name = 'employers'
     title_page = 'Employers'
     paginate_by = 25
 
-    def get_ordering(self):
-        ordering = self.request.GET.get('ordering', 'id')
-        return ordering
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        paginator = context['paginator']
-        page_obj = context['page_obj']
-        context['page_range'] = paginator.get_elided_page_range(page_obj.number)
-        context['current_ordering'] = self.get_ordering()
+        context['qs_json'] = json.dumps(list(User.objects.values()), cls=DateTimeEncoder)
         return context
+        
+    
+ 
+# class EmployersListView(ListView):
+#     model = Staff
+#     template_name = "cstaff/employers.html"
+#     context_object_name = 'employers'
+#     title_page = 'Employers'
+#     paginate_by = 25
+#     print(model)
+
+#     def get_ordering(self):
+#         ordering = self.request.GET.get('ordering', 'id')
+#         return ordering
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         paginator = context['paginator']
+#         page_obj = context['page_obj']
+#         context['page_range'] = paginator.get_elided_page_range(page_obj.number)
+#         context['current_ordering'] = self.get_ordering()
+#         # context['qs_json'] = json.dumps(list(Staff.objects.values()))
+#         return context
     
     
 class SearchResultsView(ListView):
@@ -54,6 +83,7 @@ class SearchResultsView(ListView):
     template_name = 'cstaff/search_results.html'
     context_object_name = 'employers'
     paginate_by = 25
+    
 
     def get_queryset(self):
         query = self.request.GET.get('q')

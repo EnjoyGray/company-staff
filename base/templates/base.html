@@ -74,6 +74,7 @@
                     </div>
                 </div>
             </nav>
+            {% comment %}
             <script>
                 $(document).ready(function () {
                     var searchResultsUrl = "{% url 'cstaff:search_results' %}";
@@ -129,6 +130,7 @@
                     }
                 });
             </script>
+            {% endcomment %}
         </section>
 
         {% block content %} {% endblock %}
