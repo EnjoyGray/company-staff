@@ -1,66 +1,105 @@
 {% extends "base.html" %} {% block content %} {% load custom_tags %}
 
 <section class="mcontainer">
-    {% comment %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'id' %}">ID</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'name' %}">Name</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'position__position_staff' %}">Position</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'date_of_employment' %}">Time Employed</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'salary' %}">Salary</a></th>
-            </tr>
-        </thead>
-        <tbody class="table-group-divider">
-            {% for w in table.items %}
-            <tr>
-                <th scope="row">{{ w.id }}</th>
-                <td>{{ w.first_name }}</td>
-                <td>{{ w.position.position_staff }}</td>
-                <td>{{ w.date_of_employment }}</td>
-                <td>{{ w.salary }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endcomment %} {% include "./includes/pagination.html" %}
-</section>
-
-<section class="mcontainer">
     <input type="text" id="search_here" class="form-control" placeholder="type here to search..." />
     <div id="box">
         {% for item in employers %}
-        <b>{{ item.username }}
+        <b>{{ item.first_name }} {{ item.last_name }}</b>
         <br />
         {% endfor %}
     </div>
 </section>
 
-<script>
-    const data = "{{ qs_json }}";
-    //console.log(data);
+<section class="mcontainer">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'id' %}">ID</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'name' %}">Name</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__position__position_staff' %}">Position</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__date_of_employment' %}">Time Employed</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__salary' %}">Salary</a></th>
+            </tr>
+        </thead>
+        <tbody id="tablebox" class="table-group-divider">
+            {% for p in employers %} {% if not p.is_superuser %}
+            <tr>
+                <th scope="row">{{ p.id }}</th>
+                <td><a href="#">{{ p.first_name }} {{ p.last_name }}</a></td>
+                <td>{{ p.profile.position.position_staff }}</td>
+                <td>{{ p.profile.date_of_employment }}</td>
+                <td>{{ p.profile.salary }}</td>
+            </tr>
+            {% endif %} {% endfor %}
+        </tbody>
+    </table>
+    {% if paginator.count > 25 %} {% include "./includes/pagination.html" %} {% endif %}
+</section>
 
-    const rdata = JSON.parse(data.replace(/&quot;/g, '"'));
-    //console.log(rdata);
+<script>
+    const data = "{{ qs_json|escapejs }}"; // Переконайтеся, що JSON коректно екранується для шаблонів Django
+    const rdata = JSON.parse(data);
 
     const input = document.getElementById("search_here");
-    //console.log(input);
-
-    let filteredArr = [];
+    const box = document.getElementById("box");
+    const tablebox = document.getElementById("tablebox");
 
     input.addEventListener("keyup", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
         box.innerHTML = "";
-        filteredArr = rdata.filter(info => info["username"].includes(e.target.value));
-        //console.log(filteredArr);
-        if (filteredArr.length > 0){
-            filteredArr.map(info=>{
-                box.innerHTML += `<b>${info['username']}</b><br>`;
+        tablebox.innerHTML = "";
+
+        const filteredArr = rdata.filter(
+            (info) =>
+                info.first_name.toLowerCase().includes(searchTerm) ||
+                info.last_name.toLowerCase().includes(searchTerm) ||
+                (info.username && info.username.toLowerCase().includes(searchTerm))
+        );
+
+        if (filteredArr.length > 0) {
+            filteredArr.forEach((info) => {
+                if (!info.is_superuser) {
+                    box.innerHTML += `<b>${info.first_name} ${info.last_name}</b><br>`;
+                    tablebox.innerHTML += `
+                    <tr>
+                        <th scope="row">${info.id}</th>
+                        <td><a href="${info.absolute_url}">${info.first_name} ${info.last_name}</a></td>
+                        <td>${info.profile_position_staff}</td>
+                        <td>${info.profile_date_of_employment}</td>
+                        <td>${info.profile_salary}</td>
+                    </tr>`;
+                }
             });
         } else {
-            box.innerHTML = "<b>No results found...</b>"
+            box.innerHTML = "<b>Нічого не знайдено...</b>";
         }
     });
+</script>
+
+<script>
+    //    const data = "{{ qs_json }}";
+    //    //console.log(data);
+    //
+    //    const rdata = JSON.parse(data.replace(/&quot;/g, '"'));
+    //    //console.log(rdata);
+    //
+    //    const input = document.getElementById("search_here");
+    //    //console.log(input);
+    //
+    //    let filteredArr = [];
+    //
+    //    input.addEventListener("keyup", (e) => {
+    //        box.innerHTML = "";
+    //        filteredArr = rdata.filter((info) => info[("first_name", "last_name", "username")].includes(e.target.value));
+    //        //console.log(filteredArr);
+    //        if (filteredArr.length > 0) {
+    //            filteredArr.map((info) => {
+    //                box.innerHTML += `<b>${info["first_name"]} ${info["last_name"]}</b><br>`;
+    //            });
+    //        } else {
+    //            box.innerHTML = "<b>No results found...</b>";
+    //        }
+    //    });
 </script>
 
 {% endblock content %}

@@ -9,10 +9,10 @@ app_name = 'cstaff'
 urlpatterns = [
     path('', views.IndexListView.as_view(), name="index"),
     path('employers/', views.EmployersListView.as_view(), name="employers"),
+    path('profil_employer/<slug:eprofil_slug>/', views.EmployersProfilDetailView.as_view(), name='employer_profil'),
+    
     path('myprofil/', views.MyProfilDetailView.as_view(), name='myprofil'),
     path('myprofil/edit/', views.profile_view, name='edit_myprofil'),
-    path('profil_employers/<int:pk>/', views.EmployersProfilDetailView.as_view(), name='employers_profil'),
-    path('search/', views.SearchResultsView.as_view(), name='search_results'),
     
     path('login/', views.LoginUser.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),

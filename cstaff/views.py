@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from .models import Staff, Position, StaffGroup
@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from datetime import datetime
 from .encoders import DateTimeEncoder
+from django.db.models import F
 
 
 # Create your views here.
@@ -37,11 +38,13 @@ class IndexListView(ListView):
 def employers_view(request):
     data = {
         "name": "John Doe",
-        "hired_at": datetime.now()  # Приклад об'єкта datetime
+        "hired_at": datetime.now()
     }
     
     return JsonResponse(data, encoder=DateTimeEncoder)
 
+    
+ 
 class EmployersListView(ListView):
     model = User
     template_name = "cstaff/employers.html"
@@ -49,72 +52,43 @@ class EmployersListView(ListView):
     title_page = 'Employers'
     paginate_by = 25
 
+    def get_ordering(self):
+        ordering = self.request.GET.get('ordering', 'id')
+        return ordering
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['qs_json'] = json.dumps(list(User.objects.values()), cls=DateTimeEncoder)
+        paginator = context['paginator']
+        page_obj = context['page_obj']
+        context['page_range'] = paginator.get_elided_page_range(page_obj.number)
+        context['current_ordering'] = self.get_ordering()
+
+        users_with_profiles = User.objects.annotate(
+            profile_position_staff=F('profile__position__position_staff'),
+            profile_date_of_employment=F('profile__date_of_employment'),
+            profile_salary=F('profile__salary'),
+        ).values('id', 'first_name', 'last_name', 'is_superuser', 'username', 'profile_position_staff', 'profile_date_of_employment', 'profile_salary')
+
+        context['qs_json'] = json.dumps(list(users_with_profiles), cls=DjangoJSONEncoder)
         return context
         
     
- 
-# class EmployersListView(ListView):
-#     model = Staff
-#     template_name = "cstaff/employers.html"
-#     context_object_name = 'employers'
-#     title_page = 'Employers'
-#     paginate_by = 25
-#     print(model)
-
-#     def get_ordering(self):
-#         ordering = self.request.GET.get('ordering', 'id')
-#         return ordering
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         paginator = context['paginator']
-#         page_obj = context['page_obj']
-#         context['page_range'] = paginator.get_elided_page_range(page_obj.number)
-#         context['current_ordering'] = self.get_ordering()
-#         # context['qs_json'] = json.dumps(list(Staff.objects.values()))
-#         return context
-    
-    
-class SearchResultsView(ListView):
-    model = Staff
-    template_name = 'cstaff/search_results.html'
-    context_object_name = 'employers'
-    paginate_by = 25
-    
-
-    def get_queryset(self):
-        query = self.request.GET.get('q')
-        if query:
-            if query.isdigit():  # Check if the input is a digit for ID search
-                return Staff.objects.filter(id=int(query))
-            else:
-                return Staff.objects.filter(
-                    Q(name__icontains=query) |
-                    Q(position__position_staff__icontains=query) |
-                    Q(date_of_employment__icontains=query)
-                )
-        return Staff.objects.all()
-
-    def render_to_response(self, context, **response_kwargs):
-        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            employers = list(context['employers'].values('id', 'name', 'position__position_staff', 'date_of_employment', 'salary'))
-            return JsonResponse({'employers': employers})
-        return super().render_to_response(context, **response_kwargs)
         
    
 class EmployersProfilDetailView(LoginRequiredMixin, DetailView):
-    model = Staff
+    model = User
     template_name = "cstaff/employers_profil.html"
-    pk_url_kwarg = "pk"
-    context_object_name = 'profil'
+    slug_url_kwarg = "eprofil_slug"
+    context_object_name = 'eprofil'
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(User, slug=self.kwargs[self.slug_url_kwarg])
     
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['profil'] = self.request.user.staff
+        
         return context
 
 

@@ -29,17 +29,6 @@ class StaffGroup(models.Model):
         verbose_name = "Staff Group" 
         verbose_name_plural = "Staff Groups"
         ordering = ['id']
-
-class StaffGroup(models.Model):
-    group_staff = models.IntegerField(verbose_name="Group")
-    
-    def __str__(self):
-        return str(self.group_staff) 
-
-    class Meta:
-        verbose_name = "Staff Group" 
-        verbose_name_plural = "Staff Groups"
-        ordering = ['id']
         
 
 def get_default_position():
@@ -96,4 +85,4 @@ class Staff(models.Model):
         ordering = ['user']
 
     def get_absolute_url(self):
-        return reverse('employers', kwargs={'pk': self.pk})
+        return reverse('employer_profil', kwargs={'eprofil_slug': self.user.username})
