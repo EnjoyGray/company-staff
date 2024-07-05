@@ -7,8 +7,9 @@
 <section class="mcontainer">
     <table class="table">
         <thead>
-            <tr>
+            <tr class="text-align-c">
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'id' %}">ID</a></th>
+                <th scope="col">Image</th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'last_name' %}">Name</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__position__position_staff' %}">Position</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__date_of_employment' %}">Time Employed</a></th>
@@ -17,8 +18,15 @@
         </thead>
         <tbody id="tablebox" class="table-group-divider">
             {% for p in employers %} {% if not p.is_superuser %}
-            <tr>
+            <tr class="text-align-c">
                 <th scope="row">{{ p.id }}</th>
+                <td>
+                    {% if p.profile.image.url %}
+                    <img class="mp-img--small" src="{{ p.profile.image.url }}" alt="Users Picture" />
+                    {% else %}
+                    <img class="mp-img--small" src="\static\cstaff\blank_profile.jpeg" alt="Users Picture" />
+                    {% endif %}
+                </td>
                 <td><a href="{{ p.profile.get_absolute_url }}">{{ p.first_name }} {{ p.last_name }}</a></td>
                 <td>{{ p.profile.position.position_staff }}</td>
                 <td>{{ p.profile.date_of_employment }}</td>
@@ -35,12 +43,10 @@
     const rdata = JSON.parse(data);
 
     const input = document.getElementById("search_here");
-    const box = document.getElementById("box");
     const tablebox = document.getElementById("tablebox");
 
     input.addEventListener("keyup", (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        box.innerHTML = "";
         tablebox.innerHTML = "";
 
         const filteredArr = rdata.filter(
@@ -53,11 +59,20 @@
         if (filteredArr.length > 0) {
             filteredArr.forEach((info) => {
                 if (!info.is_superuser) {
-                    box.innerHTML += `<b>${info.first_name} ${info.last_name}</b><br>`;
+                    console.log(info.profile_image);
                     tablebox.innerHTML += `
-                    <tr>
+                    <tr class="text-align-c">
                         <th scope="row">${info.id}</th>
-                        <td><a href="${info.profile_absolute_url}">${info.first_name} ${info.last_name}</a></td>
+                        <td>
+                            <img class="mp-img--small" src="${
+                                info.profile_image.url ? info.profile_image : "/static/cstaff/blank_profile.jpeg"
+                            }" alt="Users Picture" />
+                        </td>
+                        <td>
+                            <a href="${info.profile_absolute_url}">
+                                ${info.first_name} ${info.last_name}
+                            </a>
+                        </td>
                         <td>${info.profile_position_staff}</td>
                         <td>${info.profile_date_of_employment}</td>
                         <td>${info.profile_salary}</td>
@@ -65,35 +80,12 @@
                 }
             });
         } else {
-            box.innerHTML = "<b>Нічого не знайдено...</b>";
+            tablebox.innerHTML += `
+                    <tr class="text-align-c">
+                        <td colspan="6">not found...</td>
+                    </tr>`;
         }
     });
-</script>
-
-<script>
-    //    const data = "{{ qs_json }}";
-    //    //console.log(data);
-    //
-    //    const rdata = JSON.parse(data.replace(/&quot;/g, '"'));
-    //    //console.log(rdata);
-    //
-    //    const input = document.getElementById("search_here");
-    //    //console.log(input);
-    //
-    //    let filteredArr = [];
-    //
-    //    input.addEventListener("keyup", (e) => {
-    //        box.innerHTML = "";
-    //        filteredArr = rdata.filter((info) => info[("first_name", "last_name", "username")].includes(e.target.value));
-    //        //console.log(filteredArr);
-    //        if (filteredArr.length > 0) {
-    //            filteredArr.map((info) => {
-    //                box.innerHTML += `<b>${info["first_name"]} ${info["last_name"]}</b><br>`;
-    //            });
-    //        } else {
-    //            box.innerHTML = "<b>No results found...</b>";
-    //        }
-    //    });
 </script>
 
 {% endblock content %}

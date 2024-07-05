@@ -67,7 +67,8 @@ class EmployersListView(ListView):
             profile_position_staff=F('profile__position__position_staff'),
             profile_date_of_employment=F('profile__date_of_employment'),
             profile_salary=F('profile__salary'),
-        ).values('id', 'first_name', 'last_name', 'is_superuser', 'username', 'profile_position_staff', 'profile_date_of_employment', 'profile_salary')
+            profile_image=F('profile__image'),
+        ).values('id', 'first_name', 'last_name', 'is_superuser', 'username', 'profile_position_staff', 'profile_date_of_employment', 'profile_salary', 'profile_image')
 
         users_list = list(users_with_profiles)
         for user in users_list:
