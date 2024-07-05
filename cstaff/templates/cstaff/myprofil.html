@@ -26,11 +26,26 @@
                 <p>salary:</p>
                 <p>date:</p>
             </div>
-            <div>
+            <div>{% if user.email %}
                 <p>{{ user.email }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %}
+                {% if user.profile.position %}
                 <p>{{ user.profile.position }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %}
+                {% if user.profile.salary %}
                 <p>{{ user.profile.salary }}$</p>
+                {% else %}
+                <p>-</p>
+                {% endif %}
+                {% if user.profile.date_of_employment %}
                 <p>{{ user.profile.date_of_employment }}</p>
+                {% else %} 
+                <p>-</p>
+                {% endif %}
             </div>
             
 

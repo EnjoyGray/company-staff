@@ -10,7 +10,7 @@
             {% endif %}
             <div class="mp-header-text">
                 <p class="mp-id">id: {{ profil.id }}</p>
-                <p class="mp-id">login: {{ user.username }}</p>
+                <p class="mp-id">username: {{ user.username }}</p>
                 <p class="mp-name">name: <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
             </div>
         </div>
@@ -22,10 +22,23 @@
                 <p>date:</p>
             </div>
             <div>
+                {% if user.email %}
                 <p>{{ user.email }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %} {% if user.profile.position %}
                 <p>{{ user.profile.position }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %} {% if user.profile.salary %}
                 <p>{{ user.profile.salary }}$</p>
+                {% else %}
+                <p>-</p>
+                {% endif %} {% if user.profile.date_of_employment %}
                 <p>{{ user.profile.date_of_employment }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %}
             </div>
         </div>
     </div>

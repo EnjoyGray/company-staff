@@ -2,12 +2,6 @@
 
 <section class="mcontainer">
     <input type="text" id="search_here" class="form-control" placeholder="type here to search..." />
-    <div id="box">
-        {% for item in employers %}
-        <b>{{ item.first_name }} {{ item.last_name }}</b>
-        <br />
-        {% endfor %}
-    </div>
 </section>
 
 <section class="mcontainer">
@@ -15,7 +9,7 @@
         <thead>
             <tr>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'id' %}">ID</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'name' %}">Name</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'last_name' %}">Name</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__position__position_staff' %}">Position</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__date_of_employment' %}">Time Employed</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__salary' %}">Salary</a></th>
