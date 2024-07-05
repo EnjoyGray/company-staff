@@ -8,8 +8,9 @@ from django.contrib.auth.views import LogoutView
 app_name = 'cstaff'
 urlpatterns = [
     path('', views.IndexListView.as_view(), name="index"),
-    path('employers/', views.EmployersListView.as_view(), name="employers"),
+   
     path('profil/<slug:profil_slug>/', views.EmployersProfilDetailView.as_view(), name='employer_profil'),
+    path('employers/', views.EmployersListView.as_view(), name='employers_list'),
     
     path('myprofil/', views.MyProfilDetailView.as_view(), name='myprofil'),
     path('myprofil/edit/', views.profile_view, name='edit_myprofil'),

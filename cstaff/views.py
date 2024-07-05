@@ -63,14 +63,23 @@ class EmployersListView(ListView):
         context['page_range'] = paginator.get_elided_page_range(page_obj.number)
         context['current_ordering'] = self.get_ordering()
 
-        users_with_profiles = User.objects.annotate(
+        users_with_profiles = User.objects.select_related('profile').annotate(
             profile_position_staff=F('profile__position__position_staff'),
             profile_date_of_employment=F('profile__date_of_employment'),
             profile_salary=F('profile__salary'),
         ).values('id', 'first_name', 'last_name', 'is_superuser', 'username', 'profile_position_staff', 'profile_date_of_employment', 'profile_salary')
 
-        context['qs_json'] = json.dumps(list(users_with_profiles), cls=DjangoJSONEncoder)
+        users_list = list(users_with_profiles)
+        for user in users_list:
+            try:
+                staff_member = Staff.objects.get(user_id=user['id'])
+                user['profile_absolute_url'] = staff_member.get_absolute_url()
+            except Staff.DoesNotExist:
+                user['profile_absolute_url'] = "#"
+
+        context['qs_json'] = json.dumps(users_list, cls=DjangoJSONEncoder)
         return context
+
         
     
         
