@@ -3,24 +3,29 @@
 <section class="mcontainer">
     <div class="mp-box">
         <div class="mp-header">
-            <img class="mp-img" src="\static\cstaff\blank_profile.jpeg" alt="" />
+            {% if user.profile.image %}
+            <img class="mp-img" src="{{ user.profile.image.url }}" alt="Users Picture" />
+            {% else %}
+            <img class="mp-img" src="\static\cstaff\blank_profile.jpeg" alt="Users Picture" />
+            {% endif %}
             <div class="mp-header-text">
-                <p class="mp-id">id: 8423</p>
-                <p class="mp-name">name: <strong>Dave Bank</strong></p>
+                <p class="mp-id">id: {{ profil.id }}</p>
+                <p class="mp-id">login: {{ user.username }}</p>
+                <p class="mp-name">name: <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
             </div>
         </div>
         <div class="mp-body">
             <div>
-                <p>position:</p>
                 <p>email:</p>
+                <p>position:</p>
                 <p>salary:</p>
                 <p>date:</p>
             </div>
             <div>
-                <p>Manager</p>
-                <p>testowa@gmail.com</p>
-                <p>$5400</p>
-                <p>16.06.2024</p>
+                <p>{{ user.email }}</p>
+                <p>{{ user.profile.position }}</p>
+                <p>{{ user.profile.salary }}$</p>
+                <p>{{ user.profile.date_of_employment }}</p>
             </div>
         </div>
     </div>

@@ -25,7 +25,7 @@
             {% for p in employers %} {% if not p.is_superuser %}
             <tr>
                 <th scope="row">{{ p.id }}</th>
-                <td><a href="#">{{ p.first_name }} {{ p.last_name }}</a></td>
+                <td><a href="{{ p.get_absolute_url }}">{{ p.first_name }} {{ p.last_name }}</a></td>
                 <td>{{ p.profile.position.position_staff }}</td>
                 <td>{{ p.profile.date_of_employment }}</td>
                 <td>{{ p.profile.salary }}</td>
@@ -63,7 +63,7 @@
                     tablebox.innerHTML += `
                     <tr>
                         <th scope="row">${info.id}</th>
-                        <td><a href="${info.absolute_url}">${info.first_name} ${info.last_name}</a></td>
+                        <td><a href="${info.get_absolute_url}">${info.first_name} ${info.last_name}</a></td>
                         <td>${info.profile_position_staff}</td>
                         <td>${info.profile_date_of_employment}</td>
                         <td>${info.profile_salary}</td>

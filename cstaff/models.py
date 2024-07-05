@@ -85,4 +85,4 @@ class Staff(models.Model):
         ordering = ['user']
 
     def get_absolute_url(self):
-        return reverse('employer_profil', kwargs={'eprofil_slug': self.user.username})
+        return reverse('employer_profil', kwargs={'profil_slug': self.user.username})

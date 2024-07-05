@@ -78,19 +78,20 @@ class EmployersListView(ListView):
 class EmployersProfilDetailView(LoginRequiredMixin, DetailView):
     model = User
     template_name = "cstaff/employers_profil.html"
-    slug_url_kwarg = "eprofil_slug"
-    context_object_name = 'eprofil'
+    slug_url_kwarg = "profil_slug"
+    context_object_name = 'profil'
     
-    def get_object(self, queryset=None):
-        return get_object_or_404(User, slug=self.kwargs[self.slug_url_kwarg])
-    
-    
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profil'] = self.request.user.staff
-        
+        context['profil'] = self.get_object().profile
+        context['user'] = self.get_object()
+            
         return context
-
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(User, username=self.kwargs[self.slug_url_kwarg])
+    
 
 
 # def index(request):
