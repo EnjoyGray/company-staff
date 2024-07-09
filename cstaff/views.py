@@ -10,7 +10,6 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
 from django.contrib.auth import login, get_user_model
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
@@ -21,6 +20,8 @@ from django.http import JsonResponse
 from datetime import datetime
 from .encoders import DateTimeEncoder
 from django.db.models import F
+from .filters import StaffFilter
+
 
 
 # Create your views here.
@@ -62,6 +63,7 @@ class EmployersListView(ListView):
         page_obj = context['page_obj']
         context['page_range'] = paginator.get_elided_page_range(page_obj.number)
         context['current_ordering'] = self.get_ordering()
+        context['filter'] = StaffFilter(self.request.GET, queryset=self.get_queryset())
 
         users_with_profiles = User.objects.select_related('profile').annotate(
             profile_position_staff=F('profile__position__position_staff'),
@@ -81,9 +83,7 @@ class EmployersListView(ListView):
         context['qs_json'] = json.dumps(users_list, cls=DjangoJSONEncoder)
         return context
 
-        
-    
-        
+                
    
 class EmployersProfilDetailView(LoginRequiredMixin, DetailView):
     model = User
@@ -102,10 +102,7 @@ class EmployersProfilDetailView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         return get_object_or_404(User, username=self.kwargs[self.slug_url_kwarg])
     
-
-
-# def index(request):
-#     return render(request, "cstaff/index.html")
+    
    
 
 # -------------users--------------------

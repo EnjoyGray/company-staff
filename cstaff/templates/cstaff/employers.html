@@ -1,4 +1,20 @@
-{% extends "base.html" %} {% block content %} {% load custom_tags %}
+{% extends "base.html" %} {% block content %} {% load custom_tags %} {% load bootstrap %}
+
+<section class="mcontainer">
+    <form method="GET">
+        {{ filter.form|bootstrap }}
+        <button type="submit" class="btn btn-dark">Search</button>
+    </form>
+    <div>
+        <ul>
+            {% for item in filter.qs %}
+            <li>
+                <a href="{{ item.profile.get_absolute_url }}">{{ item.first_name }} {{ item.last_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
 
 <section class="mcontainer">
     <input type="text" id="search_here" class="form-control" placeholder="type here to search..." />
@@ -29,7 +45,7 @@
                 </td>
                 <td><a href="{{ p.profile.get_absolute_url }}">{{ p.first_name }} {{ p.last_name }}</a></td>
                 <td>{{ p.profile.position.position_staff }}</td>
-                <td>{{ p.profile.date_of_employment }}</td>
+                <td>{{ p.profile.date_of_employment|date:"d.m.Y" }}</td>
                 <td>{{ p.profile.salary }}</td>
             </tr>
             {% endif %} {% endfor %}
@@ -59,13 +75,12 @@
         if (filteredArr.length > 0) {
             filteredArr.forEach((info) => {
                 if (!info.is_superuser) {
-                    console.log(info.profile_image);
                     tablebox.innerHTML += `
                     <tr class="text-align-c">
                         <th scope="row">${info.id}</th>
                         <td>
                             <img class="mp-img--small" src="${
-                                info.profile_image.url ? info.profile_image : "/static/cstaff/blank_profile.jpeg"
+                                "/media/" + info.profile_image ? "/media/" + info.profile_image : "/static/cstaff/blank_profile.jpeg"
                             }" alt="Users Picture" />
                         </td>
                         <td>

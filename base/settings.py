@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_table_sort',
     'django_seed',
     'cstaff',
+    'django_filters',
+    'bootstrapform',
     
 ]
 
