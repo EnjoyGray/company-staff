@@ -271,3 +271,7 @@ td {
 .form-control {
     width: 200px;
 }
+
+.search-line {
+    margin-top: 20px;
+}
