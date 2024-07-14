@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import HttpResponse, JsonResponse
 from .models import Staff, Position, StaffGroup
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
@@ -17,9 +17,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from datetime import datetime
 from .encoders import DateTimeEncoder
-from django.db.models import F
 from .filters import StaffFilter
 
 
@@ -70,7 +68,9 @@ class EmployersListView(ListView):
             profile_date_of_employment=F('profile__date_of_employment'),
             profile_salary=F('profile__salary'),
             profile_image=F('profile__image'),
-        ).values('id', 'first_name', 'last_name', 'is_superuser', 'username', 'profile_position_staff', 'profile_date_of_employment', 'profile_salary', 'profile_image')
+        ).values('id', 'first_name', 'last_name', 'is_superuser', 'username',
+                 'profile_position_staff', 'profile_date_of_employment',
+                 'profile_salary', 'profile_image')
 
         users_list = list(users_with_profiles)
         for user in users_list:
@@ -100,7 +100,8 @@ class EmployersProfilDetailView(LoginRequiredMixin, DetailView):
         return context
     
     def get_object(self, queryset=None):
-        return get_object_or_404(User, username=self.kwargs[self.slug_url_kwarg])
+        return get_object_or_404(User, 
+                                 username=self.kwargs[self.slug_url_kwarg])
     
     
    

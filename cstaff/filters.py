@@ -1,14 +1,16 @@
 import django_filters
-from cstaff.models import Staff
 from django.contrib.auth.models import User
+from cstaff.models import Staff
 
 
 class StaffFilter(django_filters.FilterSet):
-    
+    profile__salary = django_filters.RangeFilter()
     
     class Meta:
         model = User
         fields = {
-            'first_name': ['icontains'],
-            'last_name': ['icontains'],
+            'profile__position': ['lte', 'gte',],
+            'profile__group': ['exact'],
+            'profile__group_leader': ['exact'],
         }
+        

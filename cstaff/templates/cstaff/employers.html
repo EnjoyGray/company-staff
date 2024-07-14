@@ -1,10 +1,22 @@
-{% extends "base.html" %} {% block content %} {% load custom_tags %} {% load bootstrap %}
+{% extends "base.html" %} {% block content %} {% load custom_tags %} {% load bootstrap %} {% load widget_tweaks %}
 
 <section class="mcontainer">
-    <form method="GET">
-        {{ filter.form|bootstrap }}
+    <form class="body-filter" method="GET">
+        <div class="filter-form">{{ filter.form|bootstrap }}</div>
+
         <button type="submit" class="btn btn-dark">Search</button>
+        <a href="{% url 'cstaff:employers_list' %}" class="btn btn-dark">Clear Filters</a>
     </form>
+
+    {% comment %}
+    <form method="post">
+        {% csrf_token %} {% render_field filter.form.profile__salary placeholder="TEST" class+="form-control" %}
+        <!---->
+        {% csrf_token %} {% render_field filter.form.profile__position placeholder="asdasf" class+="asdtrol" %}
+        <button type="submit" class="btn btn-dark">Submit</button>
+    </form>
+    {% endcomment %}
+
     <div>
         <ul>
             {% for item in filter.qs %}
@@ -17,7 +29,7 @@
 </section>
 
 <section class="mcontainer">
-    <input type="text" id="search_here" class="form-control" placeholder="type here to search..." />
+    <input type="text" id="search_here" class="form-control" placeholder="Enter a name to search here..." />
 </section>
 
 <section class="mcontainer">
@@ -37,7 +49,7 @@
             <tr class="text-align-c">
                 <th scope="row">{{ p.id }}</th>
                 <td>
-                    {% if p.profile.image.url %}
+                    {% if p.profile.image %}
                     <img class="mp-img--small" src="{{ p.profile.image.url }}" alt="Users Picture" />
                     {% else %}
                     <img class="mp-img--small" src="\static\cstaff\blank_profile.jpeg" alt="Users Picture" />

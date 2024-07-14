@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cstaff',
     'django_filters',
     'bootstrapform',
+    'widget_tweaks',
     
 ]
 
