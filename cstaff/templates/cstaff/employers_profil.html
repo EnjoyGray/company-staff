@@ -1,0 +1,47 @@
+{% extends "base.html" %} {% block content %}
+
+<section class="mcontainer">
+    <div class="mp-box">
+        <div class="mp-header">
+            {% if user.profile.image %}
+            <img class="mp-img" src="{{ user.profile.image.url }}" alt="Users Picture" />
+            {% else %}
+            <img class="mp-img" src="\static\cstaff\blank_profile.jpeg" alt="Users Picture" />
+            {% endif %}
+            <div class="mp-header-text">
+                <p class="mp-id">id: {{ profil.id }}</p>
+                <p class="mp-id">username: {{ user.username }}</p>
+                <p class="mp-name">name: <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
+            </div>
+        </div>
+        <div class="mp-body">
+            <div>
+                <p>email:</p>
+                <p>position:</p>
+                <p>salary:</p>
+                <p>date:</p>
+            </div>
+            <div>
+                {% if user.email %}
+                <p>{{ user.email }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %} {% if user.profile.position %}
+                <p>{{ user.profile.position }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %} {% if user.profile.salary %}
+                <p>{{ user.profile.salary }}$</p>
+                {% else %}
+                <p>-</p>
+                {% endif %} {% if user.profile.date_of_employment %}
+                <p>{{ user.profile.date_of_employment }}</p>
+                {% else %}
+                <p>-</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

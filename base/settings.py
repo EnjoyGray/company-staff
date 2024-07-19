@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django_table_sort',
     'django_seed',
     'cstaff',
+    'django_filters',
+    'bootstrapform',
+    'widget_tweaks',
     
 ]
 
@@ -137,3 +140,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'cstaff:index'
 LOGOUT_REDIRECT_URL = 'cstaff:index'
+ 
+ 

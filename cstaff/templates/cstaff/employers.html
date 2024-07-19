@@ -1,28 +1,107 @@
-{% extends "base.html" %} {% block content %} {% load custom_tags %}
+{% extends "base.html" %} {% block content %} {% load custom_tags %} {% load bootstrap %} {% load widget_tweaks %}
+
+<section class="mcontainer">
+    <form class="body-filter" method="GET">
+        <div class="filter-form">{{ filter.form|bootstrap }}</div>
+
+        <button type="submit" class="btn btn-dark">Search</button>
+        <a href="{% url 'cstaff:employers_list' %}" class="btn btn-dark">Clear Filters</a>
+        <input type="text" id="search_here" class="form-control search-line" placeholder="Enter a name to search here..." />
+    </form>
+    {% comment %}
+    <div>
+        <ul>
+            {% for item in filter.qs %}
+            <li>
+                <a href="{{ item.profile.get_absolute_url }}">{{ item.first_name }} {{ item.last_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endcomment %}
+</section>
 
 <section class="mcontainer">
     <table class="table">
         <thead>
-            <tr>
+            <tr class="text-align-c">
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'id' %}">ID</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'name' %}">Name</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'position__position_staff' %}">Position</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'date_of_employment' %}">Time Employed</a></th>
-                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'salary' %}">Salary</a></th>
+                <th scope="col">Image</th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'last_name' %}">Name</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__position__position_staff' %}">Position</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__date_of_employment' %}">Time Employed</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__salary' %}">Salary</a></th>
             </tr>
         </thead>
-        <tbody class="table-group-divider">
-            {% for w in table.items %}
-            <tr>
-                <th scope="row">{{ w.id }}</th>
-                <td>{{ w.name }}</td>
-                <td>{{ w.position.position_staff }}</td>
-                <td>{{ w.date_of_employment }}</td>
-                <td>{{ w.salary }}</td>
+        <tbody id="tablebox" class="table-group-divider">
+            {% for p in filter.qs %} {% if not p.is_superuser %}
+            <tr class="text-align-c">
+                <th scope="row">{{ p.id }}</th>
+                <td>
+                    {% if p.profile.image %}
+                    <img class="mp-img--small" src="{{ p.profile.image.url }}" alt="Users Picture" />
+                    {% else %}
+                    <img class="mp-img--small" src="\static\cstaff\blank_profile.jpeg" alt="Users Picture" />
+                    {% endif %}
+                </td>
+                <td><a href="{{ p.profile.get_absolute_url }}">{{ p.first_name }} {{ p.last_name }}</a></td>
+                <td>{{ p.profile.position.position_staff }}</td>
+                <td>{{ p.profile.date_of_employment|date:"d.m.Y" }}</td>
+                <td>{{ p.profile.salary }}</td>
             </tr>
-            {% endfor %}
+            {% endif %} {% endfor %}
         </tbody>
     </table>
-    {% include "./includes/pagination.html" %}
+    {% if paginator.count > 25 %} {% include "./includes/pagination.html" %} {% endif %}
 </section>
+
+<script>
+    const data = "{{ qs_json|escapejs }}";
+    const rdata = JSON.parse(data);
+
+    const input = document.getElementById("search_here");
+    const tablebox = document.getElementById("tablebox");
+
+    input.addEventListener("keyup", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        tablebox.innerHTML = "";
+
+        const filteredArr = rdata.filter(
+            (info) =>
+                info.first_name.toLowerCase().includes(searchTerm) ||
+                info.last_name.toLowerCase().includes(searchTerm) ||
+                (info.username && info.username.toLowerCase().includes(searchTerm))
+        );
+
+        if (filteredArr.length > 0) {
+            filteredArr.forEach((info) => {
+                if (!info.is_superuser) {
+                    tablebox.innerHTML += `
+                    <tr class="text-align-c">
+                        <th scope="row">${info.id}</th>
+                        <td>
+                            <img class="mp-img--small" src="${
+                                info.profile_image ? "/media/" + info.profile_image : "/static/cstaff/blank_profile.jpeg"
+                            }" alt="Users Picture" />
+                        </td>
+                        <td>
+                            <a href="${info.profile_absolute_url}">
+                                ${info.first_name} ${info.last_name}
+                            </a>
+                        </td>
+                        <td>${info.profile_position_staff}</td>
+                        <td>${info.profile_date_of_employment}</td>
+                        <td>${info.profile_salary}</td>
+                    </tr>`;
+                }
+            });
+        } else {
+            tablebox.innerHTML += `
+                    <tr class="text-align-c">
+                        <td colspan="6">not found...</td>
+                    </tr>`;
+        }
+    });
+</script>
+
 {% endblock content %}

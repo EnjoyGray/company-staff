@@ -184,6 +184,16 @@ td {
     height: 100%;
 }
 
+.mp-img--small {
+    max-width: 50px;
+    height: 100%;
+}
+
+.text-align-c {
+    text-align: center;
+    vertical-align: middle;
+}
+
 .mp-header-text {
     display: flex;
     flex-direction: column;
@@ -205,12 +215,63 @@ td {
     gap: 0px 30px;
 }
 
-.form-error {
-    color: rgb(209, 49, 49);
+.form-error,
+.errorlist {
+    color: rgb(209, 49, 49) !important;
 }
 
 #mybtn {
     color: #eee;
     background-color: inherit;
     border: none;
+}
+
+.ionicon {
+    width: 30px !important;
+    color: #ccc !important;
+}
+
+.ionicon:hover,
+.ionicon:active {
+    color: #fff !important;
+}
+
+.r-position {
+    margin-left: auto;
+}
+
+.form-container p {
+    color: #ccc;
+    width: 400px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.body-filter {
+    padding: 20px;
+    width: 100%;
+    background-color: #444;
+    border-radius: 9px;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 40px 100px;
+
+    margin-bottom: 20px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+.form-control {
+    width: 200px;
+}
+
+.search-line {
+    margin-top: 20px;
 }
