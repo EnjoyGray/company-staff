@@ -28,6 +28,7 @@
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'id' %}">ID</a></th>
                 <th scope="col">Image</th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'last_name' %}">Name</a></th>
+                <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__group__group_staff' %}">Group</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__position__position_staff' %}">Position</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__date_of_employment' %}">Time Employed</a></th>
                 <th scope="col"><a href="?ordering={% toggle_ordering current_ordering 'profile__salary' %}">Salary</a></th>
@@ -45,6 +46,7 @@
                     {% endif %}
                 </td>
                 <td><a href="{{ p.profile.get_absolute_url }}">{{ p.first_name }} {{ p.last_name }}</a></td>
+                <td>{{ p.profile.group.group_staff }}</td>
                 <td>{{ p.profile.position.position_staff }}</td>
                 <td>{{ p.profile.date_of_employment|date:"d.m.Y" }}</td>
                 <td>{{ p.profile.salary }}</td>
@@ -89,6 +91,7 @@
                                 ${info.first_name} ${info.last_name}
                             </a>
                         </td>
+                        <td>${info.profile_group}</td>
                         <td>${info.profile_position_staff}</td>
                         <td>${info.profile_date_of_employment}</td>
                         <td>${info.profile_salary}</td>

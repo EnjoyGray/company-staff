@@ -63,14 +63,17 @@ class EmployersListView(ListView):
         context['current_ordering'] = self.get_ordering()
         context['filter'] = StaffFilter(self.request.GET, queryset=self.get_queryset())
 
+
+        # for ajax
         users_with_profiles = User.objects.select_related('profile').annotate(
             profile_position_staff=F('profile__position__position_staff'),
+            profile_group=F('profile__group__group_staff'),
             profile_date_of_employment=F('profile__date_of_employment'),
             profile_salary=F('profile__salary'),
             profile_image=F('profile__image'),
         ).values('id', 'first_name', 'last_name', 'is_superuser', 'username',
                  'profile_position_staff', 'profile_date_of_employment',
-                 'profile_salary', 'profile_image')
+                 'profile_salary', 'profile_image', 'profile_group')
 
         users_list = list(users_with_profiles)
         for user in users_list:
